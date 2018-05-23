@@ -10,6 +10,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 
 @SpringBootApplication
+@EnableRedisRepositories
 public class TodoMgrApplication {
     public static void main(String[] args) {
         SpringApplication.run(TodoMgrApplication.class, args);
