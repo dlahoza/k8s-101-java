@@ -2,22 +2,12 @@ package com.example.todomgr.repo;
 
 
 import com.example.todomgr.model.Todo;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface TodoRepository {
-
-    List<Todo> findAll();
-
-    void create(Todo todo);
-
-    Todo findById(String id);
-
-    void update(String id, Todo newVersion);
-
-    void delete(String id);
-
-
+public interface TodoRepository extends CrudRepository<Todo, String> {
+    List<Todo> findByPriority(int priority);
 }
 
 

@@ -26,22 +26,27 @@ public class TodoController {
 
     @PostMapping
     public void create(@RequestBody Todo todo) {
-        todoRepo.create(todo);
+        todoRepo.save(todo);
     }
 
     @GetMapping("/{id}")
     public Todo findById(@PathVariable String id) {
-        return todoRepo.findById(id);
+        return todoRepo.findById(id).get();
     }
 
     @PutMapping("/{id}")
     public void update(@PathVariable String id, @RequestBody Todo todo) {
-        todoRepo.update(id, todo);
+        todoRepo.save(todo);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") String id) {
-        todoRepo.delete(id);
+        todoRepo.deleteById(id);
+    }
+
+    @GetMapping(value = "", params = "priority")
+    public Iterable<Todo> findByPriority(@RequestParam("priority") int priority) {
+        return todoRepo.findByPriority(priority);
     }
 
 
