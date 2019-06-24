@@ -16,7 +16,7 @@ public class TodoMgrApplication {
         SpringApplication.run(TodoMgrApplication.class, args);
     }
 
-    @Bean
+/*    @Bean
     public LettuceConnectionFactory getConnectionFactory() {
         return new LettuceConnectionFactory(new RedisStandaloneConfiguration());
     }
@@ -25,7 +25,7 @@ public class TodoMgrApplication {
     public StringRedisTemplate getRedisTemplate(LettuceConnectionFactory connectionFactory) {
         return new StringRedisTemplate(connectionFactory);
     }
-
+*/
 }
 
 
