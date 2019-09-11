@@ -2,9 +2,11 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: todo-manager
-  namespace: default
 spec:
-  replicas: 1
+  #ReplicaSet
+  replicas: 3
+
+  #Deployment
   selector:
     matchLabels:
       app: todo-manager
@@ -13,63 +15,69 @@ spec:
       maxSurge: 1
       maxUnavailable: 1
     type: RollingUpdate
+
+  #Pods
   template:
     metadata:
       labels:
         app: todo-manager
     spec:
       containers:
-      - name: todo-manager
-        image: dlag/todo-manager:v1.0.0
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: REDIS_HOST
-          value: localhost
-        livenessProbe:
-          failureThreshold: 10
-          httpGet:
-            path: /todos
-            port: 8080
-            scheme: HTTP
-          initialDelaySeconds: 60
-          periodSeconds: 30
-          successThreshold: 1
-          timeoutSeconds: 10
-        ports:
-        - containerPort: 8080
-          name: web
-          protocol: TCP
-        readinessProbe:
-          failureThreshold: 10
-          httpGet:
-            path: /todos
-            port: 8080
-            scheme: HTTP
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 60
-        resources:
-          limits:
-            cpu: 100m
-            memory: 256Mi
-          requests:
-            cpu: 90m
-            memory: 230Mi
-      - name: redis
-        image: redis
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 6379
-          name: redis
-          protocol: TCP
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 90m
-            memory: 100Mi
+        #TODO Manager
+        - name: todo-manager
+          image: dlag/todo-manager:v1.0.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REDIS_HOST
+              value: localhost
+            - name: REDIS_PORT
+              value: "6379"
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /todos
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+          ports:
+            - containerPort: 8080
+              name: web
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /todos
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 60
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 256Mi
+            requests:
+              cpu: 90m
+              memory: 230Mi
+        #Redis
+        - name: redis
+          image: redis
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+              name: redis
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 100Mi
+            requests:
+              cpu: 90m
+              memory: 100Mi
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
 ---
@@ -82,7 +90,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 8080
-    targetPort: 8080
+    - port: 8080
+      targetPort: 8080
   selector:
     app: todo-manager
